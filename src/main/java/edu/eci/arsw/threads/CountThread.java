@@ -9,6 +9,22 @@ package edu.eci.arsw.threads;
  *
  * @author hcadavid
  */
-public class CountThread {
+public class CountThread extends Thread{
+    private int base;
+    private int tope;
+    public CountThread(int i, int j){
+
+        base=i;
+        tope=j;
+        
+    }
+    @Override
+    public void run() {
+      for(int contador=base;contador<=tope;contador++){
+          System.out.println(contador);
+      }
+        
+        
+    }
     
 }
