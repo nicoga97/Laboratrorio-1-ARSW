@@ -16,13 +16,16 @@ import java.util.LinkedList;
 public class BusquedaServidor extends Thread {
     private int base;
     private int tope;
+    int checkedListsCount = 0;
     private String ipaddress;
     LinkedList<Integer> blackListOcurrences=new LinkedList<>();
+    HostBlackListsValidator h;
     
-    public BusquedaServidor(int base,int tope,String ipaddress){
+    public BusquedaServidor(int base,int tope,String ipaddress, HostBlackListsValidator h){
      this.base=base;
      this.tope=tope;
      this.ipaddress=ipaddress;
+     this.h=h;
     }
 
     @Override
@@ -30,15 +33,24 @@ public class BusquedaServidor extends Thread {
         
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
         for (int i=base;i<tope ;i++){
+            checkedListsCount++;
             if (skds.isInBlackListServer(i, ipaddress)){ 
-                blackListOcurrences.add(i);
+                h.agregarOcurrencia(i);
+                if(h.getBlackListOcurrences().size()>4){
+                    break;
+                }
+                
             }
         }
     }
     
     public LinkedList<Integer>  retornarOcurrencias(){
-        System.out.println(blackListOcurrences);
      return blackListOcurrences;
     }
+
+    public int getCheckedListsCount() {
+        return checkedListsCount;
+    }
+    
     
 }
